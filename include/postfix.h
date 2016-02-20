@@ -1,7 +1,7 @@
 #include "stack.h"
 #include <string>
 #include <map>
-typedef float ResType;
+typedef float RT;
 
 template<class VT> 
 class Postfix
@@ -9,35 +9,20 @@ class Postfix
 private:
 	Stack<VT> operators;
 	Stack<VT> arguments;
-
+	
+	Stack<RT> S;
 	int IsOperator(char) const;
 	int IsArgument(char) const;
-	bool GetTwoOperands (VT & op1, VT & op2);
 public:
 	Postfix();
 	~Postfix();
 
 	string PostfixForm(string);
-	//ResType Calculator(string);
+	///////////////////////////////////
+	bool GetTwoOperands (RT & op1, RT & op2);
+	void Compute (char op);
+	void Calcul(void);
 };
-
-template<class VT>
-bool Postfix<VT>:: GetTwoOperands (VT & op1, VT & op2)
-{
-	if (S.IsEmpty())
-	{
-		cout<<"false" << endl;
-		return false;
-	}
-	op1 = S.Pop(); //извлечь первый операнд
-	if (S.IsEmpty())
-	{
-		cout<<"false" << endl;
-		return false;
-	}
-	op2 = S.Pop();
-	return true;
-}
 
 template<class VT>
 Postfix<VT>:: Postfix()
@@ -148,4 +133,78 @@ string Postfix<VT>:: PostfixForm(string str)
 	}
 
 	return str_result;
+}
+
+////////////////////////////////////
+template<class VT>
+void Postfix<VT>:: Calcul(void)
+{
+	char c;
+	RT newop;
+	while(cin>>c, c != '=')
+	{
+		switch(c)
+		{
+			case '+':
+			case '-':
+			case '*':
+			case '/':
+				Compute(c);
+				break;
+			default://не оператор вернуть символ
+				cin.putback(c);
+				cin>> newop;//читать оператор передать в стек
+				S.Push(newop);
+				break;
+		}
+	}
+	if (!S.IsEmpty())
+	{
+		cout <<"Result: "<<( S.Pop() )<< endl; 
+	}
+	while (!S.IsEmpty())
+		S.Pop();//очистить стек
+}
+
+template<class VT>
+bool Postfix<VT>:: GetTwoOperands (RT & op1, RT & op2)
+{
+	if (S.IsEmpty())
+	{
+		cout<<"false" << endl;
+		return false;
+	}
+	op1 = S.Pop(); //извлечь первый операнд
+	if (S.IsEmpty())
+	{
+		cout<<"false" << endl;
+		return false;
+	}
+	op2 = S.Pop();
+	return true;
+}
+
+template<class VT>
+void Postfix<VT>:: Compute (char op)
+{//выполнение операции
+	bool result;
+	RT op1, op2;
+	//извлечь два операнда и получить код завершения
+	result = GetTwoOperands(op1,op2);
+	//выполнить оператор поместить в стек иначе очистить стек, проверка на деление на 0
+	if (result==true)
+	switch (op)
+	{
+	case '+': S.Push(op2+op1); break;
+	case '-': S.Push(op2-op1); break;
+	case '*': S.Push(op2*op1); break;
+	case '/':
+		if (op1 == 0)
+			throw ("error"); //{ cout << "NULL" << endl;}
+		else
+			S.Push(op2/op1);
+		break;
+	}
+	else 
+		cout << "error1" << endl;
 }
