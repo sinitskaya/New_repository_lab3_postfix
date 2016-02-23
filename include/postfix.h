@@ -13,14 +13,15 @@ private:
 	Stack<RT> S;
 	int IsOperator(char) const;
 	int IsArgument(char) const;
+	//////////////////////////////
+	bool GetTwoOperands (RT & op1, RT & op2);
+	void Compute (char op);
 public:
 	Postfix();
 	~Postfix();
 
 	string PostfixForm(string);
 	///////////////////////////////////
-	bool GetTwoOperands (RT & op1, RT & op2);
-	void Compute (char op);
 	void Calcul(void);
 };
 
@@ -69,7 +70,7 @@ string Postfix<VT>:: PostfixForm(string str)
 	priority ['='] = 0;
 
 	char value;
-	for (int i=0; i < str.length(); i++)
+	for (unsigned int i=0; i < str.length(); i++)
 	{
 		value = str[i];
 		if (value == ' ')
@@ -125,7 +126,7 @@ string Postfix<VT>:: PostfixForm(string str)
 	while (!operators.IsEmpty())
 		str_result = str_result + operators.Pop();
 	
-	for (int i=0; i < str_result.length(); i++)
+	for (unsigned int i=0; i < str_result.length(); i++)
 	{
 		value = str_result[i];
 		if (value == '(')
