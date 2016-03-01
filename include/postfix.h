@@ -14,6 +14,7 @@ private:
 	int IsOperator(char) const;
 	int IsArgument(char) const;
 	//////////////////////////////
+	string Enter (string str);
 	bool GetTwoOperands (RT & op1, RT & op2);
 	void Compute (char op);
 public:
@@ -22,7 +23,7 @@ public:
 
 	string PostfixForm(string);
 	///////////////////////////////////
-	void Calcul(void);
+	RT Calcul(string str);
 };
 
 template<class VT>
@@ -138,33 +139,55 @@ string Postfix<VT>:: PostfixForm(string str)
 
 ////////////////////////////////////
 template<class VT>
-void Postfix<VT>:: Calcul(void)
+string Postfix<VT>:: Enter(string str)
 {
-	char c;
-	RT newop;
-	while(cin>>c, c != '=')
+	char ch;
+	for (unsigned int i=0; i < str.length(); i++)
 	{
-		switch(c)
+		ch = str[i];
+		if (IsArgument(ch))
 		{
-			case '+':
-			case '-':
-			case '*':
-			case '/':
-				Compute(c);
-				break;
-			default://не оператор вернуть символ
-				cin.putback(c);
-				cin>> newop;//читать оператор передать в стек
-				S.Push(newop);
-				break;
+			cout << "Enter " << ch << ": ";
+			cin >> str[i];
 		}
 	}
-	if (!S.IsEmpty())
+	return str;
+}
+
+template<class VT>
+RT Postfix<VT>:: Calcul(string str)
+{
+	char ch;
+	string s1 = Enter(str);
+	RT newop;
+	for (unsigned int i=0; i < s1.length(); i++)
 	{
-		cout <<"Result: "<<( S.Pop() )<< endl; 
+		ch = s1[i];
+		if ( (ch!=' ')&&(ch != '=') )
+			switch(ch)
+			{
+				case '+':
+				case '-':
+				case '*':
+				case '/':
+					Compute(ch);
+					break;
+				default://не оператор вернуть символ
+					cin.putback(ch);
+					cin>> newop;//читать оператор передать в стек
+					S.Push(newop);
+					break;
+			}
 	}
+
+	RT Result;
+	if (!S.IsEmpty())
+		Result = S.Pop();
+	if (!S.IsEmpty())
+		cout << "error Calcul"<< endl;
 	while (!S.IsEmpty())
 		S.Pop();//очистить стек
+	return Result;
 }
 
 template<class VT>

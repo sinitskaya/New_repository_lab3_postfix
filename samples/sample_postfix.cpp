@@ -10,6 +10,6 @@ int main()
 	string postfix_str = postfix.PostfixForm(str);
 	cout << endl << "Выражение в постфиксной форме: " << postfix_str << endl;
 
-	cout << "Ведите постфиксное выражение для подсчета:" << endl;
-	postfix.Calcul();
+	cout << postfix.Calcul(postfix_str);
+	return 0;
 }
