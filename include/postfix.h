@@ -142,7 +142,6 @@ template<class VT>
 string Postfix<VT>:: Enter(string str)
 {
 	char ch;
-	//char *s
 	for (unsigned int i=0; i < str.length(); i++)
 	{
 		ch = str[i];
@@ -164,17 +163,17 @@ RT Postfix<VT>:: Calcul(string str)
 	for (unsigned int i=0; i < s1.length(); i++)
 	{
 		ch = s1[i];
-		if((ch!=' ')&&(ch != '='))
-			switch(c)
+		if ( (ch!=' ')&&(ch != '=') )
+			switch(ch)
 			{
 				case '+':
 				case '-':
 				case '*':
 				case '/':
-					Compute(c);
+					Compute(ch);
 					break;
 				default://не оператор вернуть символ
-					cin.putback(c);
+					cin.putback(ch);
 					cin>> newop;//читать оператор передать в стек
 					S.Push(newop);
 					break;
